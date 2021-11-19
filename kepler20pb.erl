@@ -1,8 +1,9 @@
 -module(kepler20pb).
 -export([start/0, kepler20pb/2, molecule/2, generate_molecules/1, ready_to_turn_water/1]).
+-import(lists, [map/2]).
 
 kepler20pb(_, 0) ->
-    io:format("Finished.~n", []);
+    io:format("No have more molecules of Oxygens and Hydrogens at Kepler82.~n", []);
 kepler20pb(RttwPID, N_MOLECULES) ->
     generate_molecules(RttwPID),
 
@@ -14,11 +15,11 @@ ready_to_turn_water(State) ->
     receive
         {Type} ->
             NewList = lists:append(State, Type),
-            io:format("~p ~n", [NewList]),
-            
+
+            map(fun(X) -> io:format("~s ~n", [X]) end, NewList),
+
             ready_to_turn_water(NewList)
     end.
-
 molecule(Molecule_Type, RttwPID) ->
     io:format("A molecule ~p of ~s is energizing ~n", [self(), Molecule_Type]),
     timer:sleep((rand:uniform(2) + 4) * 1000),
